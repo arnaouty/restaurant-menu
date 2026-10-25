@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menu, Location &amp; Payment</title>
+<style>
+  :root { --bg:#faf7f2; --card:#fff; --text:#222; --muted:#666; --accent:#c0392b; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
+  main { max-width:480px; margin:0 auto; padding:32px 16px 48px; }
+  h1 { margin:0 0 4px; font-size:1.8rem; text-align:center; }
+  .tagline, .table { text-align:center; color:var(--muted); margin:4px 0; }
+  .table { font-weight:600; color:var(--accent); }
+  .btn { display:flex; align-items:center; gap:14px; width:100%; margin-top:14px; padding:18px 20px;
+         background:var(--card); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,.08);
+         color:inherit; text-decoration:none; font-size:1.15rem; font-weight:600; border:0; cursor:pointer; text-align:left; font-family:inherit; }
+  .btn span.icon { font-size:1.6rem; }
+  .btn small { display:block; font-weight:400; color:var(--muted); font-size:.85rem; }
+  .panel { margin-top:14px; background:var(--card); border-radius:14px; padding:6px 20px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .panel[hidden] { display:none; }
+  .panel ul { padding:0; margin:0; }
+  .panel li { list-style:none; padding:12px 0; border-bottom:1px solid #eee; }
+  .panel li:last-child { border-bottom:0; }
+  .panel a { color:var(--accent); font-weight:600; }
+  .panel h3 { margin:16px 0 4px; color:var(--accent); font-size:1.05rem; }
+  .item { display:flex; justify-content:space-between; gap:12px; }
+  .item .desc { display:block; color:var(--muted); font-size:.85rem; }
+  .item .price { font-weight:700; white-space:nowrap; }
+  .item.soldout { opacity:.45; }
+  .item.soldout .price::after { content:" · Sold out"; font-weight:400; }
+  footer { text-align:center; color:var(--muted); margin-top:28px; font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="name">Loading…</h1>
+  <p class="tagline" id="tagline"></p>
+  <p class="table" id="table" hidden></p>
+
+  <button class="btn" id="menuBtn" type="button"><span class="icon">🍽️</span><div>Menu<small>See our dishes &amp; prices</small></div></button>
+  <section class="panel" id="menu" hidden></section>
+  <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener"><span class="icon">📍</span><div>Location<small id="address"></small></div></a>
+  <button class="btn" id="payBtn" type="button"><span class="icon">💳</span><div>Payment methods<small>Cash, card &amp; online</small></div></button>
+  <section class="panel" id="pay" hidden><ul id="payList"></ul></section>
+
+  <footer id="footer"></footer>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const table = params.get("t");
+  const go = params.get("go");
+
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  // Cache-busting query so menu edits from the admin panel show up quickly.
+  fetch("restaurant.json?v=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(c => {
+    if (go === "location") return location.replace(c.location.maps_url);
+
+    document.title = c.name;
+    document.getElementById("name").textContent = c.name;
+    document.getElementById("tagline").textContent = c.tagline || "";
+    if (table) {
+      const t = document.getElementById("table");
+      t.textContent = "Table " + table;
+      t.hidden = false;
+    }
+    document.getElementById("mapBtn").href = c.location.maps_url;
+    document.getElementById("address").textContent = c.location.address || "Open in Maps";
+
+    const menu = document.getElementById("menu");
+    for (const cat of c.menu.categories) {
+      menu.append(el("h3", null, cat.name));
+      const ul = el("ul");
+      for (const item of cat.items) {
+        const li = el("li", "item" + (item.available === false ? " soldout" : ""));
+        const left = el("div");
+        left.append(el("strong", null, item.name));
+        if (item.description) left.append(el("span", "desc", item.description));
+        li.append(left, el("span", "price", item.price + " " + (c.currency || "")));
+        ul.append(li);
+      }
+      menu.append(ul);
+    }
+
+    const list = document.getElementById("payList");
+    for (const m of c.payment_methods) {
+      const li = el("li");
+      const title = el(m.url ? "a" : "strong", null, m.name);
+      if (m.url) { title.href = m.url; title.target = "_blank"; title.rel = "noopener"; }
+      li.append(title);
+      if (m.note) li.append(el("small", null, " — " + m.note));
+      list.append(li);
+    }
+
+    const pay = document.getElementById("pay");
+    document.getElementById("menuBtn").onclick = () => { menu.hidden = !menu.hidden; };
+    document.getElementById("payBtn").onclick = () => { pay.hidden = !pay.hidden; };
+    if (go === "menu") { menu.hidden = false; menu.scrollIntoView(); }
+    if (go === "pay") { pay.hidden = false; pay.scrollIntoView(); }
+
+    if (c.phone) document.getElementById("footer").textContent = "Need help? Call " + c.phone;
+  });
+</script>
+</body>
+</html>
