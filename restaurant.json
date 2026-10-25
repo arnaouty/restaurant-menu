@@ -2,7 +2,7 @@
   "name": "My Restaurant",
   "tagline": "Welcome! Scan, browse and pay from your table.",
   "base_url": "https://arnaouty.github.io/restaurant-menu/",
-  "tables": 10,
+  "tables": 50,
   "phone": "+20 100 000 0000",
   "currency": "EGP",
   "location": {
@@ -10,32 +10,78 @@
     "maps_url": "https://www.google.com/maps/search/?api=1&query=30.0444,31.2357"
   },
   "payment_methods": [
-    { "name": "Cash", "note": "Pay your waiter or at the counter", "url": "" },
-    { "name": "Visa / Mastercard", "note": "Ask for the card machine", "url": "" },
-    { "name": "Apple Pay / Google Pay", "note": "Contactless at the table", "url": "" },
-    { "name": "Pay online", "note": "Secure payment link", "url": "https://example.com/pay" }
+    {
+      "name": "Cash",
+      "note": "Pay your waiter or at the counter",
+      "url": ""
+    },
+    {
+      "name": "Visa / Mastercard",
+      "note": "Ask for the card machine",
+      "url": ""
+    },
+    {
+      "name": "Apple Pay / Google Pay",
+      "note": "Contactless at the table",
+      "url": ""
+    },
+    {
+      "name": "Pay online",
+      "note": "Secure payment link",
+      "url": "https://example.com/pay"
+    }
   ],
   "menu": {
     "categories": [
       {
         "name": "Starters",
         "items": [
-          { "name": "Lentil Soup", "description": "With crispy bread and lemon", "price": 60, "available": true },
-          { "name": "Hummus", "description": "Chickpeas, tahini, olive oil", "price": 55, "available": true }
+          {
+            "name": "Lentil Soup",
+            "description": "With crispy bread and lemon",
+            "price": 60,
+            "available": true
+          },
+          {
+            "name": "Hummus",
+            "description": "Chickpeas, tahini, olive oil",
+            "price": 55,
+            "available": true
+          }
         ]
       },
       {
         "name": "Main Dishes",
         "items": [
-          { "name": "Grilled Chicken", "description": "Half chicken, rice and salad", "price": 180, "available": true },
-          { "name": "Beef Kofta", "description": "With tahini and grilled vegetables", "price": 220, "available": false }
+          {
+            "name": "Grilled Chicken",
+            "description": "Half chicken, rice and salad",
+            "price": 180,
+            "available": true
+          },
+          {
+            "name": "Beef Kofta",
+            "description": "With tahini and grilled vegetables",
+            "price": 220,
+            "available": false
+          }
         ]
       },
       {
         "name": "Drinks",
         "items": [
-          { "name": "Fresh Orange Juice", "description": "", "price": 45, "available": true },
-          { "name": "Turkish Coffee", "description": "", "price": 35, "available": true }
+          {
+            "name": "Fresh Orange Juice",
+            "description": "",
+            "price": 45,
+            "available": true
+          },
+          {
+            "name": "Turkish Coffee",
+            "description": "",
+            "price": 35,
+            "available": true
+          }
         ]
       }
     ]
