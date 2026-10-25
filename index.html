@@ -24,11 +24,19 @@
   .panel li:last-child { border-bottom:0; }
   .panel a { color:var(--accent); font-weight:600; }
   .panel h3 { margin:16px 0 4px; color:var(--accent); font-size:1.05rem; }
-  .item { display:flex; justify-content:space-between; gap:12px; }
+  .item { display:flex; align-items:center; gap:12px; }
+  .item > div { flex:1; }
+  .item img { width:72px; height:72px; object-fit:cover; border-radius:10px; cursor:zoom-in; flex:none; }
   .item .desc { display:block; color:var(--muted); font-size:.85rem; }
   .item .price { font-weight:700; white-space:nowrap; }
   .item.soldout { opacity:.45; }
   .item.soldout .price::after { content:" · Sold out"; font-weight:400; }
+  .copy { margin-left:8px; padding:4px 10px; border:1px solid var(--accent); border-radius:8px;
+          background:none; color:var(--accent); font:inherit; font-size:.85rem; cursor:pointer; }
+  .copy-value { display:block; margin-top:4px; font-family:ui-monospace,monospace; }
+  #lightbox { position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; align-items:center; justify-content:center; padding:16px; }
+  #lightbox[hidden] { display:none; }
+  #lightbox img { max-width:100%; max-height:100%; border-radius:12px; }
   footer { text-align:center; color:var(--muted); margin-top:28px; font-size:.9rem; }
 </style>
 </head>
@@ -46,10 +54,19 @@
 
   <footer id="footer"></footer>
 </main>
+<div id="lightbox" hidden><img alt=""></div>
 <script>
   const params = new URLSearchParams(location.search);
   const table = params.get("t");
   const go = params.get("go");
+
+  const lightbox = document.getElementById("lightbox");
+  lightbox.onclick = () => { lightbox.hidden = true; };
+  function showPhoto(src, alt) {
+    const img = lightbox.querySelector("img");
+    img.src = src; img.alt = alt;
+    lightbox.hidden = false;
+  }
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -79,6 +96,12 @@
       const ul = el("ul");
       for (const item of cat.items) {
         const li = el("li", "item" + (item.available === false ? " soldout" : ""));
+        if (item.photo) {
+          const img = el("img");
+          img.src = item.photo; img.alt = item.name; img.loading = "lazy";
+          img.onclick = () => showPhoto(item.photo, item.name);
+          li.append(img);
+        }
         const left = el("div");
         left.append(el("strong", null, item.name));
         if (item.description) left.append(el("span", "desc", item.description));
@@ -92,9 +115,20 @@
     for (const m of c.payment_methods) {
       const li = el("li");
       const title = el(m.url ? "a" : "strong", null, m.name);
-      if (m.url) { title.href = m.url; title.target = "_blank"; title.rel = "noopener"; }
+      // Payment links (e.g. InstaPay) open in the same tab so the phone can hand them to the app.
+      if (m.url) title.href = m.url;
       li.append(title);
       if (m.note) li.append(el("small", null, " — " + m.note));
+      if (m.copy) {
+        const value = el("span", "copy-value", m.copy);
+        const btn = el("button", "copy", "Copy");
+        btn.type = "button";
+        btn.onclick = () => navigator.clipboard.writeText(m.copy).then(
+          () => { btn.textContent = "Copied ✓"; setTimeout(() => { btn.textContent = "Copy"; }, 2000); },
+          () => { btn.textContent = "Select & copy"; });
+        value.append(btn);
+        li.append(value);
+      }
       list.append(li);
     }
 

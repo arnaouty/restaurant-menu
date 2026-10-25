@@ -15,10 +15,16 @@ To change the menu link, address or payment methods later, edit `restaurant.json
    python3 generate_qr.py
    ```
 4. Open `qr/table-cards.html` in a browser and print it (4 cards per A4 page).
+   Or use one code for every table: print `qr/all-tables-cards.html` (no table number is shown).
 
 ## Admin panel (`admin.html`)
 Edit the restaurant name, phone, currency, address, Maps link, payment methods and the full menu here.
-That covers categories, items, descriptions, prices and sold-out status. You can also reorder and delete anything.
+That covers categories, items, descriptions, prices, photos and sold-out status. You can also reorder and delete anything.
+Photos are resized to 800px and stored in `images/`.
+
+For InstaPay, paste the payment link from the InstaPay app into a payment method's link field.
+On phones with InstaPay installed, tapping it opens the app.
+Put your InstaPay address or wallet number in the "Copyable value" field to show a Copy button.
 
 1. Open `https://<your-site>/admin.html`.
 2. Sign in with a GitHub **fine-grained personal access token**.
@@ -32,6 +38,7 @@ If it leaks, revoke it on GitHub.
 ## What the QR codes open
 | QR file | Opens |
 |---|---|
+| `qr/all-tables.png` | Landing page (same code on every table) |
 | `qr/table-XX.png` | Landing page showing "Table XX" with Menu / Location / Payment |
 | `qr/menu.png` | Landing page with the menu open |
 | `qr/location.png` | Goes straight to Google Maps |

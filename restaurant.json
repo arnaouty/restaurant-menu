@@ -13,22 +13,32 @@
     {
       "name": "Cash",
       "note": "Pay your waiter or at the counter",
-      "url": ""
+      "url": "",
+      "copy": ""
     },
     {
       "name": "Visa / Mastercard",
       "note": "Ask for the card machine",
-      "url": ""
+      "url": "",
+      "copy": ""
     },
     {
       "name": "Apple Pay / Google Pay",
       "note": "Contactless at the table",
-      "url": ""
+      "url": "",
+      "copy": ""
+    },
+    {
+      "name": "InstaPay",
+      "note": "Tap to pay in the InstaPay app",
+      "url": "https://ipn.eg/S/yourname/instapay/XXXXXX",
+      "copy": "yourname@instapay"
     },
     {
       "name": "Pay online",
       "note": "Secure payment link",
-      "url": "https://example.com/pay"
+      "url": "https://example.com/pay",
+      "copy": ""
     }
   ],
   "menu": {
@@ -40,13 +50,15 @@
             "name": "Lentil Soup",
             "description": "With crispy bread and lemon",
             "price": 60,
-            "available": true
+            "available": true,
+            "photo": ""
           },
           {
             "name": "Hummus",
             "description": "Chickpeas, tahini, olive oil",
             "price": 55,
-            "available": true
+            "available": true,
+            "photo": ""
           }
         ]
       },
@@ -57,13 +69,15 @@
             "name": "Grilled Chicken",
             "description": "Half chicken, rice and salad",
             "price": 180,
-            "available": true
+            "available": true,
+            "photo": ""
           },
           {
             "name": "Beef Kofta",
             "description": "With tahini and grilled vegetables",
             "price": 220,
-            "available": false
+            "available": false,
+            "photo": ""
           }
         ]
       },
@@ -74,13 +88,15 @@
             "name": "Fresh Orange Juice",
             "description": "",
             "price": 45,
-            "available": true
+            "available": true,
+            "photo": ""
           },
           {
             "name": "Turkish Coffee",
             "description": "",
             "price": 35,
-            "available": true
+            "available": true,
+            "photo": ""
           }
         ]
       }

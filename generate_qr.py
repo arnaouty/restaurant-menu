@@ -2,7 +2,8 @@
 
 Usage: python3 generate_qr.py
 Output: qr/table-XX.png (one per table), qr/menu.png, qr/location.png, qr/pay.png,
-        and qr/table-cards.html (printable cards, 4 per A4 page).
+        qr/table-cards.html (printable cards, 4 per A4 page),
+        qr/all-tables.png and qr/all-tables-cards.html (one shared code for every table).
 """
 import base64
 import io
@@ -42,18 +43,29 @@ def main():
     for name in ("menu", "location", "pay"):
         make_qr(link(base, go=name), OUT / f"{name}.png")
 
+    def card(png, label):
+        return (
+            f'<div class="card"><h2>{escape(config["name"])}</h2>'
+            f'<img src="data:image/png;base64,{png}" alt="QR code">'
+            f"<p>Scan for Menu · Location · Payment</p>"
+            f'<div class="table">{label}</div></div>'
+        )
+
+    shared = make_qr(base, OUT / "all-tables.png")
+    write_cards(OUT / "all-tables-cards.html", [card(shared, "")] * 4)
+
     cards = []
     for n in range(1, config["tables"] + 1):
         url = link(base, t=n)
         png = make_qr(url, OUT / f"table-{n:02d}.png")
-        cards.append(
-            f'<div class="card"><h2>{escape(config["name"])}</h2>'
-            f'<img src="data:image/png;base64,{png}" alt="QR for table {n}">'
-            f"<p>Scan for Menu · Location · Payment</p>"
-            f'<div class="table">Table {n}</div></div>'
-        )
+        cards.append(card(png, f"Table {n}"))
 
-    (OUT / "table-cards.html").write_text(
+    write_cards(OUT / "table-cards.html", cards)
+    print(f"Generated {config['tables']} table QR codes + 1 shared code in {OUT}/ (open the *-cards.html files to print)")
+
+
+def write_cards(path, cards):
+    path.write_text(
         f"""<!doctype html><html><head><meta charset="utf-8"><title>Table QR cards</title>
 <style>
   @page {{ size: A4; margin: 10mm; }}
@@ -67,7 +79,6 @@ def main():
 </style></head><body><div class="grid">{"".join(cards)}</div></body></html>""",
         encoding="utf-8",
     )
-    print(f"Generated {config['tables']} table QR codes in {OUT}/ (open table-cards.html to print)")
 
 
 if __name__ == "__main__":

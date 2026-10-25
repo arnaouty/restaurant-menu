@@ -30,6 +30,8 @@
              padding:12px 16px; display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; }
   #status { color:var(--muted); }
   .hint { color:var(--muted); font-size:.85rem; margin:0 0 12px; }
+  .photo { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .photo img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -81,8 +83,8 @@
   };
 
   // ---------- GitHub API ----------
-  function api(method, body) {
-    const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/${FILE}` +
+  function api(method, body, path = FILE) {
+    const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/${path}` +
       (method === "GET" ? `?ref=${encodeURIComponent(auth.branch)}` : "");
     return fetch(url, {
       method,
@@ -116,6 +118,21 @@
     $("login").hidden = true;
     $("editor").hidden = false;
     $("savebar").hidden = false;
+  }
+
+  // Shrinks a photo to at most 800px and uploads it to images/ in the repo.
+  async function uploadPhoto(file, itemName) {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 800 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+    const slug = itemName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
+    const path = `images/${Date.now()}-${slug}.jpg`;
+    await api("PUT", { message: `Add photo for ${itemName || "menu item"}`, content: dataUrl.split(",")[1], branch: auth.branch }, path);
+    return { path, dataUrl };
   }
 
   async function save() {
@@ -187,6 +204,35 @@
         onclick: () => { if (confirm(`Delete this ${what}?`)) change(() => arr.splice(i, 1))(); } }, "Delete"));
   }
 
+  // Local previews of photos uploaded this session (the live site needs a minute to serve them).
+  const previews = new WeakMap();
+
+  function photoField(item) {
+    const img = h("img", { alt: "" });
+    const src = previews.get(item) || item.photo;
+    if (src) img.src = src; else img.hidden = true;
+    const input = h("input", { type: "file", accept: "image/*", hidden: true });
+    const status = h("span", { class: "hint" });
+    input.addEventListener("change", async () => {
+      if (!input.files[0]) return;
+      status.textContent = "Uploading…";
+      try {
+        const { path, dataUrl } = await uploadPhoto(input.files[0], item.name);
+        item.photo = path;
+        previews.set(item, dataUrl);
+        setDirty(true);
+        render();
+      } catch (e) {
+        status.textContent = "Upload failed: " + e.message;
+      }
+    });
+    return h("div", { class: "photo" }, img,
+      h("button", { type: "button", onclick: () => input.click() }, item.photo ? "Change photo" : "Add photo"),
+      item.photo ? h("button", { type: "button", class: "danger",
+        onclick: () => { item.photo = ""; previews.delete(item); setDirty(true); render(); } }, "Remove photo") : "",
+      input, status);
+  }
+
   function addButton(text, fn) {
     return h("button", { type: "button", onclick: () => { fn(); setDirty(true); render(); } }, "+ " + text);
   }
@@ -213,9 +259,10 @@
         h("div", { class: "grid" },
           field("Name", m, "name"),
           field("Note", m, "note"),
-          field("Payment link (optional)", m, "url", "url")),
+          field("Payment link, e.g. InstaPay (optional)", m, "url", "url"),
+          field("Copyable value, e.g. InstaPay address or wallet number (optional)", m, "copy")),
         listButtons(data.payment_methods, i, "payment method"))),
-      addButton("Add payment method", () => data.payment_methods.push({ name: "", note: "", url: "" })));
+      addButton("Add payment method", () => data.payment_methods.push({ name: "", note: "", url: "", copy: "" })));
 
     const cats = data.menu.categories;
     $("menu").replaceChildren(
@@ -229,17 +276,22 @@
             field("Item name", item, "name"),
             field(`Price (${data.currency || ""})`, item, "price", "number", { min: 0, step: "any" })),
           field("Description", item, "description"),
+          photoField(item),
           checkbox("Available (untick to show as sold out)", item, "available"),
           listButtons(cat.items, ii, "item"))),
-        addButton("Add item", () => cat.items.push({ name: "", description: "", price: 0, available: true })))),
+        addButton("Add item", () => cat.items.push({ name: "", description: "", price: 0, available: true, photo: "" })))),
       addButton("Add category", () => cats.push({ name: "", items: [] })));
   }
 
   // ---------- Login ----------
   // On GitHub Pages (owner.github.io/repo/) the repository can be guessed from the URL.
+  // Elsewhere (e.g. a custom domain) fall back to this site's repository.
   if (location.hostname.endsWith(".github.io")) {
     $("owner").value = location.hostname.split(".")[0];
     $("repo").value = location.pathname.split("/")[1] || "";
+  } else {
+    $("owner").value = "arnaouty";
+    $("repo").value = "restaurant-menu";
   }
   const saved = JSON.parse(store.get("admin-auth") || "null");
   if (saved) {
