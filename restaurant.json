@@ -1,13 +1,13 @@
 {
-  "name": "My Restaurant",
+  "name": " Koun Pyramids Hotel",
   "tagline": "Welcome! Scan, browse and pay from your table.",
   "base_url": "https://arnaouty.github.io/restaurant-menu/",
   "tables": 50,
-  "phone": "+20 100 000 0000",
+  "phone": "+20 2 3377 0000",
   "currency": "EGP",
   "location": {
-    "address": "123 Main Street, Cairo",
-    "maps_url": "https://www.google.com/maps/search/?api=1&query=30.0444,31.2357"
+    "address": "Al Haram, Nazlet El-Semman, Giza Pyramids Area, Egypt",
+    "maps_url": "https://www.google.com/maps/dir/?api=1&destination=Giza+Pyramids+Nazlet+El-Semman"
   },
   "payment_methods": [
     {
