@@ -4,56 +4,99 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Menu, Location &amp; Payment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#faf7f2; --card:#fff; --text:#222; --muted:#666; --accent:#c0392b; }
+  /* Look and feel matched to kounpyramids.com: Playfair Display headings, Inter body, Cairo for Arabic, navy accents. */
+  :root {
+    --bg:#ffffff; --card:#ffffff; --cream:#f7f5ef; --border:#e8e4d9;
+    --text:#020817; --muted:#665a4c; --navy:#1e3a5f; --navy-dark:#0f1f35;
+    --serif:"Playfair Display","Cairo",Georgia,serif;
+    --sans:"Inter","Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); }
-  main { max-width:480px; margin:0 auto; padding:32px 16px 48px; }
-  h1 { margin:0 0 4px; font-size:1.8rem; text-align:center; }
-  .tagline, .table { text-align:center; color:var(--muted); margin:4px 0; }
-  .table { font-weight:600; color:var(--accent); }
-  .btn { display:flex; align-items:center; gap:14px; width:100%; margin-top:14px; padding:18px 20px;
-         background:var(--card); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,.08);
-         color:inherit; text-decoration:none; font-size:1.15rem; font-weight:600; border:0; cursor:pointer; text-align:left; font-family:inherit; }
-  .btn span.icon { font-size:1.6rem; }
-  .btn small { display:block; font-weight:400; color:var(--muted); font-size:.85rem; }
-  .panel { margin-top:14px; background:var(--card); border-radius:14px; padding:6px 20px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  body { margin:0; min-height:100vh; display:flex; flex-direction:column; font-family:var(--sans); background:var(--navy-dark);
+         color:var(--text); -webkit-font-smoothing:antialiased; }
+  /* Full-screen photo behind everything; a fixed layer instead of background-attachment, which iOS ignores. */
+  .bg { position:fixed; inset:0; z-index:-1; background:url("images/background.jpg") center 35% / cover no-repeat; }
+  .bg::after { content:""; position:absolute; inset:0;
+               background:linear-gradient(180deg, rgba(15,31,53,.55) 0%, rgba(15,31,53,.15) 38%, rgba(2,8,23,.55) 75%, rgba(2,8,23,.8) 100%); }
+  .hero { color:#fff; text-align:center; padding:44px 16px 24px; text-shadow:0 2px 18px rgba(2,8,23,.45); }
+  .badge { display:inline-block; padding:6px 16px; border:1px solid rgba(255,255,255,.35); border-radius:999px;
+           background:rgba(255,255,255,.12); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); text-shadow:none; font-size:.72rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
+  h1 { font-family:var(--serif); font-weight:500; font-size:2.6rem; line-height:1.1; letter-spacing:-.02em; margin:18px 0 0; }
+  .divider { width:72px; height:2px; margin:18px auto; background:rgba(255,255,255,.6); }
+  .tagline { margin:0 auto; max-width:420px; font-weight:300; font-size:1.05rem; line-height:1.5; color:rgba(255,255,255,.9); }
+  .table { display:inline-block; margin:18px 0 0; padding:6px 16px; border-radius:999px; background:#fff; color:var(--navy);
+           font-size:.85rem; font-weight:600; text-shadow:none; }
+  /* Push the buttons down so the pyramids stay visible between the title and the buttons. */
+  main { flex:1; width:100%; max-width:480px; margin:0 auto; padding:clamp(40px, 22vh, 220px) 16px 32px; }
+  .btn { display:flex; align-items:center; gap:16px; width:100%; margin-top:14px; padding:18px;
+         background:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.6); border-radius:16px; box-shadow:0 10px 30px -12px rgba(2,8,23,.5);
+         backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+         color:inherit; text-decoration:none; cursor:pointer; text-align:left; font-family:inherit; }
+  .btn .icon { flex:none; display:grid; place-items:center; width:48px; height:48px; border-radius:12px; background:var(--cream); color:var(--navy); }
+  .btn .label { flex:1; font-family:var(--serif); font-size:1.3rem; font-weight:700; }
+  .btn small { display:block; margin-top:2px; font-family:var(--sans); font-weight:400; font-size:.85rem; color:var(--muted); }
+  .btn .chev { color:var(--muted); flex:none; }
+  svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
+  .panel { margin-top:10px; background:rgba(255,255,255,.96); border:1px solid rgba(255,255,255,.6); border-radius:16px; padding:4px 18px 8px; }
   .panel[hidden] { display:none; }
   .panel ul { padding:0; margin:0; }
-  .panel li { list-style:none; padding:12px 0; border-bottom:1px solid #eee; }
+  .panel li { list-style:none; padding:14px 0; border-bottom:1px solid var(--border); }
   .panel li:last-child { border-bottom:0; }
-  .panel a { color:var(--accent); font-weight:600; }
-  .panel h3 { margin:16px 0 4px; color:var(--accent); font-size:1.05rem; }
+  .panel a { color:var(--navy); font-weight:600; }
+  .panel h3 { margin:18px 0 0; color:var(--navy); font-size:.75rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; }
   .item { display:flex; align-items:center; gap:12px; }
   .item > div { flex:1; }
-  .item img { width:72px; height:72px; object-fit:cover; border-radius:10px; cursor:zoom-in; flex:none; }
-  .item .desc { display:block; color:var(--muted); font-size:.85rem; }
-  .item .price { font-weight:700; white-space:nowrap; }
+  .item strong { font-weight:600; }
+  .item img { width:72px; height:72px; object-fit:cover; border-radius:12px; cursor:zoom-in; flex:none; }
+  .item .desc { display:block; margin-top:2px; color:var(--muted); font-size:.85rem; line-height:1.4; }
+  .item .price { font-weight:600; color:var(--navy); white-space:nowrap; }
   .item.soldout { opacity:.45; }
   .item.soldout .price::after { content:" · Sold out"; font-weight:400; }
-  .copy { margin-left:8px; padding:4px 10px; border:1px solid var(--accent); border-radius:8px;
-          background:none; color:var(--accent); font:inherit; font-size:.85rem; cursor:pointer; }
-  .copy-value { display:block; margin-top:4px; font-family:ui-monospace,monospace; }
-  #lightbox { position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; align-items:center; justify-content:center; padding:16px; }
+  #payList small { color:var(--muted); }
+  .copy { margin-left:8px; padding:5px 12px; border:1px solid var(--navy); border-radius:8px;
+          background:none; color:var(--navy); font:inherit; font-size:.8rem; font-weight:500; cursor:pointer; }
+  .copy-value { display:block; margin-top:6px; font-variant-numeric:tabular-nums; }
+  #lightbox { position:fixed; inset:0; background:rgba(2,8,23,.88); display:flex; align-items:center; justify-content:center; padding:16px; }
   #lightbox[hidden] { display:none; }
   #lightbox img { max-width:100%; max-height:100%; border-radius:12px; }
-  footer { text-align:center; color:var(--muted); margin-top:28px; font-size:.9rem; }
+  footer { color:rgba(255,255,255,.85); text-align:center; padding:18px 16px 28px; font-size:.9rem; }
+  footer:empty { display:none; }
+  footer a { color:#fff; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.5); }
 </style>
 </head>
 <body>
-<main>
+<div class="bg"></div>
+<header class="hero">
+  <span class="badge">Welcome</span>
   <h1 id="name">Loading…</h1>
+  <div class="divider"></div>
   <p class="tagline" id="tagline"></p>
   <p class="table" id="table" hidden></p>
-
-  <button class="btn" id="menuBtn" type="button"><span class="icon">🍽️</span><div>Menu<small>See our dishes &amp; prices</small></div></button>
+</header>
+<main>
+  <button class="btn" id="menuBtn" type="button">
+    <span class="icon"><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></span>
+    <span class="label">Menu<small>See our dishes &amp; prices</small></span>
+    <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
   <section class="panel" id="menu" hidden></section>
-  <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener"><span class="icon">📍</span><div>Location<small>Click to open location via Google Maps</small></div></a>
-  <button class="btn" id="payBtn" type="button"><span class="icon">💳</span><div>Payments<small>InstaPay</small></div></button>
+  <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener">
+    <span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+    <span class="label">Location<small>Click to open location via Google Maps</small></span>
+    <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+  <button class="btn" id="payBtn" type="button">
+    <span class="icon"><svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg></span>
+    <span class="label">Payments<small>InstaPay</small></span>
+    <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
   <section class="panel" id="pay" hidden><ul id="payList"></ul></section>
-
-  <footer id="footer"></footer>
 </main>
+<footer id="footer"></footer>
 <div id="lightbox" hidden><img alt=""></div>
 <script>
   const params = new URLSearchParams(location.search);
@@ -137,7 +180,11 @@
     if (go === "menu") { menu.hidden = false; menu.scrollIntoView(); }
     if (go === "pay") { pay.hidden = false; pay.scrollIntoView(); }
 
-    if (c.phone) document.getElementById("footer").textContent = "Need help? Call " + c.phone;
+    if (c.phone) {
+      const call = el("a", null, c.phone);
+      call.href = "tel:" + c.phone.replace(/[^+\d]/g, "");
+      document.getElementById("footer").append("Need help? Call ", call);
+    }
   });
 </script>
 </body>
