@@ -15,18 +15,6 @@
       "note": "Tap to pay in the InstaPay app",
       "url": "https://ipn.eg/S/test/instapay/44qGWV",
       "copy": "yourname@instapay"
-    },
-    {
-      "name": "Cash",
-      "note": "Pay your waiter or at the counter",
-      "url": "",
-      "copy": ""
-    },
-    {
-      "name": "Visa / Mastercard",
-      "note": "Ask for the card machine",
-      "url": "",
-      "copy": ""
     }
   ],
   "menu": {
