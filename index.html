@@ -23,10 +23,14 @@
   .panel li { list-style:none; padding:12px 0; border-bottom:1px solid #eee; }
   .panel li:last-child { border-bottom:0; }
   .panel a { color:var(--accent); font-weight:600; }
-  .panel h3 { margin:16px 0 8px; color:var(--accent); font-size:1.05rem; }
-  #menu { padding:6px 12px 12px; }
-  #menu img { display:block; width:100%; height:auto; margin-top:10px; border-radius:10px; cursor:zoom-in; }
-  #menu .empty { color:var(--muted); text-align:center; }
+  .panel h3 { margin:16px 0 4px; color:var(--accent); font-size:1.05rem; }
+  .item { display:flex; align-items:center; gap:12px; }
+  .item > div { flex:1; }
+  .item img { width:72px; height:72px; object-fit:cover; border-radius:10px; cursor:zoom-in; flex:none; }
+  .item .desc { display:block; color:var(--muted); font-size:.85rem; }
+  .item .price { font-weight:700; white-space:nowrap; }
+  .item.soldout { opacity:.45; }
+  .item.soldout .price::after { content:" · Sold out"; font-weight:400; }
   .copy { margin-left:8px; padding:4px 10px; border:1px solid var(--accent); border-radius:8px;
           background:none; color:var(--accent); font:inherit; font-size:.85rem; cursor:pointer; }
   .copy-value { display:block; margin-top:4px; font-family:ui-monospace,monospace; }
@@ -86,19 +90,26 @@
     document.getElementById("mapBtn").href = c.location.maps_url;
     document.getElementById("address").textContent = c.location.address || "Open in Maps";
 
-    // Menu pages are photos, shown in the order set in the admin panel.
     const menu = document.getElementById("menu");
-    const pages = c.menu.photos || [];
-    if (!pages.length) menu.append(el("p", "empty", "Menu coming soon"));
-    pages.forEach((page, i) => {
-      if (page.caption) menu.append(el("h3", null, page.caption));
-      const img = el("img");
-      img.src = page.src;
-      img.alt = page.caption || `Menu page ${i + 1}`;
-      if (i > 0) img.loading = "lazy";
-      img.onclick = () => showPhoto(img.src, img.alt);
-      menu.append(img);
-    });
+    for (const cat of c.menu.categories) {
+      menu.append(el("h3", null, cat.name));
+      const ul = el("ul");
+      for (const item of cat.items) {
+        const li = el("li", "item" + (item.available === false ? " soldout" : ""));
+        if (item.photo) {
+          const img = el("img");
+          img.src = item.photo; img.alt = item.name; img.loading = "lazy";
+          img.onclick = () => showPhoto(item.photo, item.name);
+          li.append(img);
+        }
+        const left = el("div");
+        left.append(el("strong", null, item.name));
+        if (item.description) left.append(el("span", "desc", item.description));
+        li.append(left, el("span", "price", item.price + " " + (c.currency || "")));
+        ul.append(li);
+      }
+      menu.append(ul);
+    }
 
     const list = document.getElementById("payList");
     for (const m of c.payment_methods) {

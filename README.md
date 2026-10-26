@@ -18,9 +18,9 @@ To change the menu link, address or payment methods later, edit `restaurant.json
    Or use one code for every table: print `qr/all-tables-cards.html` (no table number is shown).
 
 ## Admin panel (`admin.html`)
-Edit the restaurant name, phone, address, Maps link, payment methods and the menu here.
-The menu is a set of photos (for example, pictures of your printed menu pages) shown in the display order you choose.
-Upload several at once, then change their order number or use the arrows. Photos are resized to 1600px and stored in `images/`.
+Edit the restaurant name, phone, currency, address, Maps link, payment methods and the full menu here.
+That covers categories, items, descriptions, prices, photos and sold-out status. You can also reorder and delete anything.
+Photos are resized to 800px and stored in `images/`.
 
 For InstaPay, paste the payment link from the InstaPay app into a payment method's link field.
 On phones with InstaPay installed, tapping it opens the app.
