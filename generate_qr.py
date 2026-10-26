@@ -21,7 +21,7 @@ GOLD = "#9a7b4f"
 
 
 def build_qr(url):
-    # High error correction so the logo in the middle doesn't stop it scanning.
+    # High error correction so a scratched or dirty card still scans.
     qr = qrcode.QRCode(error_correction=ERROR_CORRECT_H, border=0)
     qr.add_data(url)
     qr.make(fit=True)
@@ -37,7 +37,7 @@ def make_qr(url, path):
 
 
 def qr_svg(url):
-    """Styled QR as SVG: round navy dots, rounded eyes and the pyramid logo in the centre."""
+    """Styled QR as SVG: round navy dots and rounded eyes."""
     qr = build_qr(url)
     m = qr.get_matrix()
     n = len(m)
@@ -47,19 +47,10 @@ def qr_svg(url):
     def in_eye(r, c):
         return any(er <= r < er + 7 and ec <= c < ec + 7 for er, ec in eyes)
 
-    # Versions 7+ have an alignment pattern in the exact centre, so no logo there.
-    logo = qr.version < 7
-    size = int(n * 0.26) | 1
-    lo = (n - size) // 2
-    hi = lo + size
-
-    def in_logo(r, c):
-        return logo and lo <= r < hi and lo <= c < hi
-
     dots = "".join(
         f'<circle cx="{c + .5}" cy="{r + .5}" r=".44"/>'
         for r in range(n) for c in range(n)
-        if m[r][c] and not in_eye(r, c) and not in_logo(r, c)
+        if m[r][c] and not in_eye(r, c)
     )
     eye_svg = "".join(
         f'<path fill-rule="evenodd" d="M{c + 2} {r}h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z'
@@ -67,12 +58,7 @@ def qr_svg(url):
         f'<rect x="{c + 2}" y="{r + 2}" width="3" height="3" rx=".9"/>'
         for r, c in eyes
     )
-    logo_svg = (
-        f'<rect x="{lo + .3}" y="{lo + .3}" width="{size - .6}" height="{size - .6}" rx="1.6" fill="#fff" stroke="{GOLD}" stroke-width=".18"/>'
-        f'<image href="../images/logo-pyramid.png" x="{lo + .9}" y="{lo + 1.6}" width="{size - 1.8}" height="{size - 3.2}" preserveAspectRatio="xMidYMid meet"/>'
-        if logo else ""
-    )
-    return f'<svg viewBox="0 0 {n} {n}" xmlns="http://www.w3.org/2000/svg"><g fill="{NAVY}">{dots}{eye_svg}</g>{logo_svg}</svg>'
+    return f'<svg viewBox="0 0 {n} {n}" xmlns="http://www.w3.org/2000/svg"><g fill="{NAVY}">{dots}{eye_svg}</g></svg>'
 
 
 def link(base, **query):
