@@ -20,7 +20,6 @@
   .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0 14px; }
   .row { border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:10px; }
   .row .grid { align-items:end; }
-  .category { border:2px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px; }
   .actions { display:flex; gap:8px; flex-wrap:wrap; }
   button { font:inherit; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:#fff; cursor:pointer; }
   button.primary { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
@@ -30,8 +29,10 @@
              padding:12px 16px; display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; }
   #status { color:var(--muted); }
   .hint { color:var(--muted); font-size:.85rem; margin:0 0 12px; }
-  .photo { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
-  .photo img { width:64px; height:64px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+  .page { display:flex; gap:14px; align-items:flex-start; }
+  .page img { width:110px; height:150px; object-fit:cover; border-radius:8px; border:1px solid var(--line); flex:none; }
+  .page > div { flex:1; min-width:0; }
+  .order input { width:90px; }
   [hidden] { display:none !important; }
 </style>
 </head>
@@ -112,7 +113,8 @@
     data = JSON.parse(fromBase64(file.content));
     data.location ??= { address: "", maps_url: "" };
     data.payment_methods ??= [];
-    data.menu ??= { categories: [] };
+    data.menu ??= {};
+    data.menu.photos ??= [];
     render();
     setDirty(false);
     $("login").hidden = true;
@@ -120,18 +122,17 @@
     $("savebar").hidden = false;
   }
 
-  // Shrinks a photo to at most 800px and uploads it to images/ in the repo.
-  async function uploadPhoto(file, itemName) {
+  // Shrinks a photo to at most 1600px (sharp enough to read menu text) and uploads it to images/ in the repo.
+  async function uploadPhoto(file) {
     const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 800 / Math.max(bitmap.width, bitmap.height));
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
     const canvas = document.createElement("canvas");
     canvas.width = Math.round(bitmap.width * scale);
     canvas.height = Math.round(bitmap.height * scale);
     canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
-    const slug = itemName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "item";
-    const path = `images/${Date.now()}-${slug}.jpg`;
-    await api("PUT", { message: `Add photo for ${itemName || "menu item"}`, content: dataUrl.split(",")[1], branch: auth.branch }, path);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+    const path = `images/menu-${Date.now()}.jpg`;
+    await api("PUT", { message: "Add menu photo", content: dataUrl.split(",")[1], branch: auth.branch }, path);
     return { path, dataUrl };
   }
 
@@ -186,12 +187,6 @@
     return h("label", {}, label, input);
   }
 
-  function checkbox(label, obj, key) {
-    const input = h("input", { type: "checkbox", checked: obj[key] !== false });
-    input.addEventListener("change", () => { obj[key] = input.checked; setDirty(true); });
-    return h("label", { class: "check" }, input, label);
-  }
-
   // Remove / move-up / move-down buttons for an item in an array.
   function listButtons(arr, i, what) {
     const change = fn => () => { fn(); setDirty(true); render(); };
@@ -207,30 +202,42 @@
   // Local previews of photos uploaded this session (the live site needs a minute to serve them).
   const previews = new WeakMap();
 
-  function photoField(item) {
-    const img = h("img", { alt: "" });
-    const src = previews.get(item) || item.photo;
-    if (src) img.src = src; else img.hidden = true;
-    const input = h("input", { type: "file", accept: "image/*", hidden: true });
+  // Uploads the chosen files (in file-name order) and adds them to the end of the menu.
+  function uploadButton() {
+    const input = h("input", { type: "file", accept: "image/*", multiple: true, hidden: true });
     const status = h("span", { class: "hint" });
     input.addEventListener("change", async () => {
-      if (!input.files[0]) return;
-      status.textContent = "Uploading…";
-      try {
-        const { path, dataUrl } = await uploadPhoto(input.files[0], item.name);
-        item.photo = path;
-        previews.set(item, dataUrl);
-        setDirty(true);
-        render();
-      } catch (e) {
-        status.textContent = "Upload failed: " + e.message;
+      const files = [...input.files].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      for (const [i, file] of files.entries()) {
+        status.textContent = `Uploading ${i + 1} of ${files.length}…`;
+        try {
+          const { path, dataUrl } = await uploadPhoto(file);
+          const page = { src: path, caption: "" };
+          previews.set(page, dataUrl);
+          data.menu.photos.push(page);
+          setDirty(true);
+        } catch (e) {
+          status.textContent = `Upload of ${file.name} failed: ${e.message}`;
+          render();
+          return;
+        }
       }
+      render();
     });
-    return h("div", { class: "photo" }, img,
-      h("button", { type: "button", onclick: () => input.click() }, item.photo ? "Change photo" : "Add photo"),
-      item.photo ? h("button", { type: "button", class: "danger",
-        onclick: () => { item.photo = ""; previews.delete(item); setDirty(true); render(); } }, "Remove photo") : "",
-      input, status);
+    return h("div", { class: "actions" },
+      h("button", { type: "button", class: "primary", onclick: () => input.click() }, "+ Upload menu photos"), input, status);
+  }
+
+  // Number box that moves a photo to the typed position.
+  function orderField(arr, i) {
+    const input = h("input", { type: "number", min: 1, max: arr.length, value: i + 1 });
+    input.addEventListener("change", () => {
+      const to = Math.min(arr.length, Math.max(1, Math.round(Number(input.value)) || 1)) - 1;
+      arr.splice(to, 0, arr.splice(i, 1)[0]);
+      setDirty(true);
+      render();
+    });
+    return h("label", { class: "order" }, "Display order", input);
   }
 
   function addButton(text, fn) {
@@ -244,7 +251,6 @@
       h("div", { class: "grid" },
         field("Restaurant name", data, "name"),
         field("Phone", data, "phone"),
-        field("Currency", data, "currency"),
         field("Number of tables", data, "tables", "number", { min: 1 })),
       field("Tagline", data, "tagline"),
       h("div", { class: "grid" },
@@ -264,23 +270,17 @@
         listButtons(data.payment_methods, i, "payment method"))),
       addButton("Add payment method", () => data.payment_methods.push({ name: "", note: "", url: "", copy: "" })));
 
-    const cats = data.menu.categories;
+    const pages = data.menu.photos;
     $("menu").replaceChildren(
-      h("h2", {}, "Menu"),
-      ...cats.map((cat, ci) => h("div", { class: "category" },
-        h("div", { class: "grid" }, field("Category name", cat, "name")),
-        listButtons(cats, ci, "category and all its items"),
-        h("p"),
-        ...cat.items.map((item, ii) => h("div", { class: "row" },
-          h("div", { class: "grid" },
-            field("Item name", item, "name"),
-            field(`Price (${data.currency || ""})`, item, "price", "number", { min: 0, step: "any" })),
-          field("Description", item, "description"),
-          photoField(item),
-          checkbox("Available (untick to show as sold out)", item, "available"),
-          listButtons(cat.items, ii, "item"))),
-        addButton("Add item", () => cat.items.push({ name: "", description: "", price: 0, available: true, photo: "" })))),
-      addButton("Add category", () => cats.push({ name: "", items: [] })));
+      h("h2", {}, "Menu photos"),
+      h("p", { class: "hint" }, "Customers see these photos from top to bottom. Change a photo's display order number or use the arrows to rearrange them. You can select several photos at once."),
+      ...pages.map((page, i) => h("div", { class: "row page" },
+        h("img", { src: previews.get(page) || page.src, alt: `Menu photo ${i + 1}` }),
+        h("div", {},
+          orderField(pages, i),
+          field("Title above the photo (optional)", page, "caption"),
+          listButtons(pages, i, "photo")))),
+      uploadButton());
   }
 
   // ---------- Login ----------
