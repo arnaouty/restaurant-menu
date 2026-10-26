@@ -263,14 +263,13 @@
       h("div", { class: "grid" },
         field("Restaurant name", data, "name"),
         field("Phone", data, "phone"),
-        field("Currency", data, "currency"),
-        field("Number of tables", data, "tables", "number", { min: 1 })),
+        field("Currency", data, "currency")),
       field("Tagline", data, "tagline"),
       h("div", { class: "grid" },
         field("Address", data.location, "address"),
         field("Google Maps link", data.location, "maps_url", "url")),
       field("Site URL (used in QR codes)", data, "base_url", "url"),
-      h("p", { class: "hint" }, "If you change the site URL or the number of tables, run generate_qr.py again and reprint the cards."));
+      h("p", { class: "hint" }, "If you change the site URL, run generate_qr.py again and reprint the cards."));
 
     $("payments").replaceChildren(
       h("h2", {}, "Payment methods"),

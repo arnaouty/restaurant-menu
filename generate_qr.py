@@ -1,9 +1,8 @@
 """Generate static table QR codes from restaurant.json.
 
 Usage: python3 generate_qr.py
-Output: qr/table-XX.png (one per table), qr/menu.png, qr/location.png, qr/pay.png,
-        qr/table-cards.html (designed printable cards, 4 per A4 page),
-        qr/all-tables.png and qr/all-tables-cards.html (one shared code for every table).
+Output: qr/all-tables.png (one code for every table), qr/menu.png, qr/location.png, qr/pay.png,
+        and qr/all-tables-cards.html (designed printable cards, 4 per A4 page).
 """
 import json
 from html import escape
@@ -37,7 +36,7 @@ def make_qr(url, path):
 
 
 def qr_svg(url):
-    """Styled QR as SVG: round navy dots and rounded eyes."""
+    """Styled QR as SVG: little navy pyramids for dots and rounded eyes."""
     qr = build_qr(url)
     m = qr.get_matrix()
     n = len(m)
@@ -47,8 +46,9 @@ def qr_svg(url):
     def in_eye(r, c):
         return any(er <= r < er + 7 and ec <= c < ec + 7 for er, ec in eyes)
 
+    # Each dark module is a triangle whose middle still covers the module centre, where scanners sample.
     dots = "".join(
-        f'<circle cx="{c + .5}" cy="{r + .5}" r=".44"/>'
+        f"M{c + .5} {r + .01}l.5 .96h-1z"
         for r in range(n) for c in range(n)
         if m[r][c] and not in_eye(r, c)
     )
@@ -58,14 +58,14 @@ def qr_svg(url):
         f'<rect x="{c + 2}" y="{r + 2}" width="3" height="3" rx=".9"/>'
         for r, c in eyes
     )
-    return f'<svg viewBox="0 0 {n} {n}" xmlns="http://www.w3.org/2000/svg"><g fill="{NAVY}">{dots}{eye_svg}</g></svg>'
+    return f'<svg viewBox="0 0 {n} {n}" xmlns="http://www.w3.org/2000/svg"><g fill="{NAVY}"><path d="{dots}"/>{eye_svg}</g></svg>'
 
 
 def link(base, **query):
     return f"{base}?{urlencode(query)}"
 
 
-def card(config, url, label):
+def card(config, url):
     return f"""<div class="card">
   <div class="photo"></div>
   <div class="eyebrow">Welcome to</div>
@@ -73,7 +73,7 @@ def card(config, url, label):
   <div class="tile">{qr_svg(url)}</div>
   <div class="cta">Scan for Menu · Location · Payments</div>
   <div class="rule"><span></span><i></i><span></span></div>
-  <div class="label">{escape(label)}</div>
+  <div class="label">Bon appétit</div>
 </div>"""
 
 
@@ -105,8 +105,7 @@ def write_cards(path, cards):
   .rule {{ display: flex; align-items: center; justify-content: center; gap: 2mm; margin-top: 4.5mm; }}
   .rule span {{ width: 14mm; height: .3mm; background: {GOLD}; }}
   .rule i {{ width: 1.6mm; height: 1.6mm; background: {GOLD}; transform: rotate(45deg); }}
-  .label {{ margin-top: 3.5mm; font: 700 9mm/1 "Playfair Display", "Cairo", serif; }}
-  .label:empty::before {{ content: "Bon appétit"; font-weight: 500; font-style: italic; }}
+  .label {{ margin-top: 3.5mm; font: italic 500 9mm/1 "Playfair Display", "Cairo", serif; }}
   @media screen {{ .sheet {{ gap: 6mm; padding: 6mm; width: auto; justify-content: center; }} }}
 </style></head><body><div class="sheet">{"".join(cards)}</div></body></html>""",
         encoding="utf-8",
@@ -123,16 +122,9 @@ def main():
         make_qr(link(base, go=name), OUT / f"{name}.png")
 
     make_qr(base, OUT / "all-tables.png")
-    write_cards(OUT / "all-tables-cards.html", [card(config, base, "")] * 4)
+    write_cards(OUT / "all-tables-cards.html", [card(config, base)] * 4)
 
-    cards = []
-    for n in range(1, config["tables"] + 1):
-        url = link(base, t=n)
-        make_qr(url, OUT / f"table-{n:02d}.png")
-        cards.append(card(config, url, f"Table {n}"))
-    write_cards(OUT / "table-cards.html", cards)
-
-    print(f"Generated {config['tables']} table QR codes + 1 shared code in {OUT}/ (open the *-cards.html files to print)")
+    print(f"Generated the QR codes in {OUT}/ (open all-tables-cards.html to print)")
 
 
 if __name__ == "__main__":

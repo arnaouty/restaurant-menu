@@ -2,7 +2,6 @@
   "name": "Koun Pyramids Hotel",
   "tagline": "Welcome! Scan, browse and pay from your table.",
   "base_url": "https://arnaouty.github.io/restaurant-menu/",
-  "tables": 50,
   "phone": "+20 2 3377 0000",
   "currency": "EGP",
   "location": {

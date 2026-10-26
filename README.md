@@ -14,8 +14,8 @@ To change the menu link, address or payment methods later, edit `restaurant.json
    pip install qrcode pillow
    python3 generate_qr.py
    ```
-4. Open `qr/table-cards.html` in a browser and print it (4 cards per A4 page).
-   Or use one code for every table: print `qr/all-tables-cards.html` (no table number is shown).
+4. Open `qr/all-tables-cards.html` in a browser and print it (4 cards per A4 page).
+   The same code goes on every table.
 
 ## Admin panel (`admin.html`)
 Edit the restaurant name, phone, currency, address, Maps link, payment methods and the full menu here.
@@ -39,7 +39,6 @@ If it leaks, revoke it on GitHub.
 | QR file | Opens |
 |---|---|
 | `qr/all-tables.png` | Landing page (same code on every table) |
-| `qr/table-XX.png` | Landing page showing "Table XX" with Menu / Location / Payment |
 | `qr/menu.png` | Landing page with the menu open |
 | `qr/location.png` | Goes straight to Google Maps |
 | `qr/pay.png` | Landing page with the payment methods open |
