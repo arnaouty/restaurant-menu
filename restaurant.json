@@ -85,16 +85,16 @@
         "name": "Drinks",
         "items": [
           {
-            "name": "Turkish Coffee",
+            "name": "Fresh Orange Juice",
             "description": "",
-            "price": 120,
+            "price": 45,
             "available": true,
             "photo": ""
           },
           {
-            "name": "Fresh Orange Juice",
+            "name": "Test1",
             "description": "",
-            "price": 45,
+            "price": 5000,
             "available": true,
             "photo": ""
           }
