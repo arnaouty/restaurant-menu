@@ -1,5 +1,5 @@
 {
-  "name": " Koun Pyramids Hotel",
+  "name": "Koun Pyramids Hotel",
   "tagline": "Welcome! Scan, browse and pay from your table.",
   "base_url": "https://arnaouty.github.io/restaurant-menu/",
   "tables": 50,
@@ -18,63 +18,560 @@
     }
   ],
   "menu": {
+    "note": "Service (12%) is not included",
     "categories": [
       {
-        "name": "Starters",
+        "name": "Appetizers",
         "items": [
           {
-            "name": "Lentil Soup",
-            "description": "With crispy bread and lemon",
-            "price": 60,
+            "name": "Mussels & Fries",
+            "description": "Fresh Black Mussels cooked with Garlic & Parsley, served with Crispy French Fries and Lemon Butter Sauce",
+            "price": 420,
             "available": true,
-            "photo": ""
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "premium": false
           },
           {
-            "name": "Hummus",
-            "description": "Chickpeas, tahini, olive oil",
-            "price": 55,
+            "name": "Chicken Strips & Fries",
+            "description": "Golden Crispy Chicken Strips served with French Fries",
+            "price": 350,
             "available": true,
-            "photo": ""
+            "allergens": [
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Fried Calamari",
+            "description": "Crispy Fried Calamari Rings served with Tartar Sauce",
+            "price": 360,
+            "available": true,
+            "allergens": [
+              "fish",
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Potato Dippers",
+            "description": "Golden Crispy Potato Wedges with Herbs",
+            "price": 120,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Shrimp Cocktail",
+            "description": "Chilled Shrimp served with Cocktail Sauce and Fresh Lemon, with Avocado & Sweet Corn",
+            "price": 460,
+            "available": true,
+            "allergens": [
+              "fish",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Cajun Nachos",
+            "description": "Crunchy Tortilla Chips topped with Melted Cheese, Jalapenos and Grilled Cajun Chicken",
+            "price": 250,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Crispy Basa Fingers",
+            "description": "Panko-Breaded Basa Fish Fingers, Crispy French Fries, served with Tartar Sauce",
+            "price": 320,
+            "available": true,
+            "allergens": [
+              "fish",
+              "gluten",
+              "egg"
+            ],
+            "premium": false
           }
-        ]
+        ],
+        "photo": "images/category-appetizers.jpg"
       },
       {
-        "name": "Main Dishes",
+        "name": "Soups",
         "items": [
           {
-            "name": "Grilled Chicken",
-            "description": "Half chicken, rice and salad",
-            "price": 180,
+            "name": "Onion Soup",
+            "description": "Caramelized Onions in Rich Beef Broth, topped with Toasted Bread and Melted Gruyere Cheese",
+            "price": 250,
             "available": true,
-            "photo": ""
+            "allergens": [
+              "milk",
+              "gluten"
+            ],
+            "premium": false
           },
           {
-            "name": "Beef Kofta",
-            "description": "With tahini and grilled vegetables",
-            "price": 220,
-            "available": false,
-            "photo": ""
+            "name": "Cream Mushroom Soup",
+            "description": "Creamy Soup with Wild Forest Mushrooms, Fresh Cream",
+            "price": 270,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Chicken Soup",
+            "description": "Tender Chicken Breast Pieces in Creamy Soup with Fresh Thyme",
+            "price": 260,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Seafood Soup",
+            "description": "Fresh Prawns, Calamari and Mussels in Rich Pink Bisque with Cream & Herbs",
+            "price": 400,
+            "available": true,
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "premium": false
           }
-        ]
+        ],
+        "photo": "images/category-soups.jpg"
       },
       {
-        "name": "Drinks",
+        "name": "Salads",
         "items": [
           {
-            "name": "Fresh Orange Juice",
-            "description": "",
-            "price": 45,
+            "name": "Nicoise",
+            "description": "Seared Fresh Tuna, Green Beans, Boiled Egg, Black Olives, Cherry Tomatoes and Lettuce",
+            "price": 410,
             "available": true,
-            "photo": ""
+            "allergens": [
+              "fish",
+              "milk",
+              "egg"
+            ],
+            "premium": false
           },
           {
-            "name": "Test1",
-            "description": "",
-            "price": 5000,
+            "name": "Chicken Caesar",
+            "description": "Grilled Chicken Breast, Romaine Lettuce, Parmesan Cheese, Crunchy Croutons and Caesar Dressing",
+            "price": 350,
             "available": true,
-            "photo": ""
+            "allergens": [
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Shrimp Caesar",
+            "description": "Grilled Shrimp, Romaine Lettuce, Parmesan Cheese and Classic Caesar Dressing",
+            "price": 420,
+            "available": true,
+            "allergens": [
+              "fish",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Rocca Salad",
+            "description": "Fresh Rocca Leaves, Shaved Parmesan Cheese, Balsamic Glaze and Toasted Walnuts",
+            "price": 250,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Shrimp Quinoa",
+            "description": "Grilled Shrimp, Healthy Quinoa, Fresh Avocado, Cherry Tomatoes and Mixed Greens with Lemon Dressing",
+            "price": 400,
+            "available": true,
+            "allergens": [
+              "fish",
+              "gluten"
+            ],
+            "premium": false
           }
-        ]
+        ],
+        "photo": "images/category-salads.jpg"
+      },
+      {
+        "name": "Sandwiches",
+        "items": [
+          {
+            "name": "Classic Burger",
+            "description": "Juicy Beef Patty, Cheddar Cheese, Lettuce, Tomato and Special Burger Sauce",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Burger Truffle Mushroom",
+            "description": "Beef Patty with Truffle Mayo, Caramelized Onions, Mushrooms and Gruyere Cheese",
+            "price": 600,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Chicken Pesto",
+            "description": "Grilled Chicken Breast, Fresh Basil Pesto and Melted Mozzarella in Ciabatta Bread",
+            "price": 430,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Turkey Melted",
+            "description": "Smoked Turkey, Melted Emmental, Lettuce, Sun-Dried Tomatoes, Vinaigrette on Mix Leaves",
+            "price": 500,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Smoked Salmon Cream Cheese",
+            "description": "Crispy Beef Bacon, Melted Emmental, Lettuce, Sun-Dried Tomatoes, Vinaigrette on Mix Leaves",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "fish",
+              "gluten",
+              "milk"
+            ],
+            "premium": false
+          }
+        ],
+        "photo": ""
+      },
+      {
+        "name": "Pizza",
+        "items": [
+          {
+            "name": "Marinara",
+            "description": "Tomato Sauce, Fresh Garlic, Oregano and Extra Virgin Olive Oil (No Cheese)",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "gluten"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Truffle Mushroom",
+            "description": "Truffle Cream Sauce, Wild Mushrooms, Mozzarella and Truffle Oil",
+            "price": 600,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": true
+          },
+          {
+            "name": "Napoletana",
+            "description": "Tomato Sauce, Mozzarella, Anchovies, Capers and Black Olives",
+            "price": 430,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Salmone Affumicato",
+            "description": "Smoked Salmon, Cream Cheese, Mozzarella, Capers, Fresh Dill and Lemon Zest",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "fish",
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": true
+          },
+          {
+            "name": "Beef Bacon Supreme",
+            "description": "Crispy Beef Bacon, Mozzarella, Tomato Sauce, Mushrooms and Bell Peppers",
+            "price": 500,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          }
+        ],
+        "photo": "images/category-pizza.jpg"
+      },
+      {
+        "name": "Pasta",
+        "items": [
+          {
+            "name": "Arrabbiata",
+            "description": "Penne Pasta in Spicy Tomato Sauce with Garlic, Fresh Basil and Chili Flakes",
+            "price": 300,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Rigatoni Pesto",
+            "description": "Rigatoni Pasta tossed in Fresh Basil Pesto Sauce and Parmesan",
+            "price": 350,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Spaghetti Bolognese",
+            "description": "Spaghetti with Slow-Cooked Beef Meat Sauce (Ragu) and Grated Parmesan",
+            "price": 380,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Penne Alfredo",
+            "description": "Penne Pasta in Creamy Alfredo Sauce with Grilled Chicken Pieces and Parmesan",
+            "price": 380,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Linguine Seafood",
+            "description": "Linguine Pasta with Mixed Seafood (Prawns, Calamari, Mussels) in Light Creamy Pink Sauce",
+            "price": 590,
+            "available": true,
+            "allergens": [
+              "gluten",
+              "egg",
+              "milk"
+            ],
+            "premium": false
+          }
+        ],
+        "photo": ""
+      },
+      {
+        "name": "Chicken",
+        "items": [
+          {
+            "name": "Mshab Chicken Grill",
+            "description": "Half Chicken Grilled on Charcoal, marinated with Garlic and Lemon, served with Garlic Sauce, Grilled Vegetables, Sweet Potato and Sauteed Vegetables",
+            "price": 550,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Mustard Chicken",
+            "description": "Grilled Chicken Breast served with Sauteed Vegetables and Mashed Potato",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "milk",
+              "egg"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Chicken Koun Special",
+            "description": "Breaded Chicken Roll stuffed with Smoked Ham and Melted Cheese, topped with Cheese Sauce - KOUN Special, served with Sweet Potato and Sauteed Vegetables",
+            "price": 600,
+            "available": true,
+            "allergens": [
+              "milk",
+              "egg",
+              "gluten"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Shish Taouk",
+            "description": "Marinated Chicken Cubes grilled with Garlic Sauce and Pickles, served with Sweet Potato and Sauteed Vegetables",
+            "price": 450,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Duck L'Orange Premium",
+            "description": "Slow-Roasted Duck Breast with Sweet and Tangy Orange Sauce, served with Sweet Potato and Sauteed Vegetables",
+            "price": 800,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          }
+        ],
+        "photo": "images/category-chicken.jpg"
+      },
+      {
+        "name": "Meats",
+        "items": [
+          {
+            "name": "Beef Fillet",
+            "description": "Grilled Beef Fillet cooked to perfection, served with Black Pepper Sauce, Mashed Potato, Rice and Grilled Vegetables",
+            "price": 1100,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Beef Stroganoff",
+            "description": "Tender Beef Strips in Creamy Mushroom Sauce, served with White Rice and Sauteed Vegetables",
+            "price": 800,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Rib Eye Premium",
+            "description": "Premium Rib Eye Steak grilled with Sea Salt, Rosemary and Garlic, served with Mashed Potato and Sauteed Vegetables",
+            "price": 1200,
+            "available": true,
+            "allergens": [
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Lamb Reish",
+            "description": "Juicy Grilled Lamb Chops marinated with Rosemary, Garlic and Olive Oil, served with Grilled Vegetables",
+            "price": 950,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Kebab",
+            "description": "Charcoal Grilled Minced Meat Kebab Skewers with Grilled Tomato, Onion and Grilled Vegetables",
+            "price": 660,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Grilled Kofta",
+            "description": "Juicy Grilled Kofta Skewers seasoned with Herbs, served with Tahini Sauce and Grilled Vegetables",
+            "price": 550,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          },
+          {
+            "name": "Mix Grill Premium",
+            "description": "Mixed Grill Platter: Kebab, Shish Taouk, Lamb Chops and Kofta",
+            "price": 1250,
+            "available": true,
+            "allergens": [],
+            "premium": false
+          }
+        ],
+        "photo": "images/category-meats.jpg"
+      },
+      {
+        "name": "Seafood",
+        "items": [
+          {
+            "name": "Sea Bass Grill",
+            "description": "Whole Grilled Sea Bass Fillet with Olive Oil, Lemon and Fresh Herbs, served with Ratatouille Sauce",
+            "price": 700,
+            "available": true,
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Crispy Fillet Fish",
+            "description": "Crispy Panko-Breaded Basa Fish Fillet topped with Creamy Calamari and Shrimp Sauce, served with Grilled Vegetables Koun Style",
+            "price": 550,
+            "available": true,
+            "allergens": [
+              "fish"
+            ],
+            "premium": false
+          },
+          {
+            "name": "Mix Seafood Grill",
+            "description": "Grilled Seafood Mix: Shrimp, Basa Fish, Calamari, Salmon with Lemon Butter",
+            "price": 1500,
+            "available": true,
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "premium": true
+          },
+          {
+            "name": "Salmon Florentine",
+            "description": "Pan-Seared Salmon Fillet served with Creamy Spinach Puree and Sauteed Vegetables",
+            "price": 1000,
+            "available": true,
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "premium": true
+          }
+        ],
+        "photo": ""
       }
     ]
   }

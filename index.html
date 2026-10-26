@@ -11,7 +11,7 @@
   /* Look and feel matched to kounpyramids.com: Playfair Display headings, Inter body, Cairo for Arabic, navy accents. */
   :root {
     --bg:#ffffff; --card:#ffffff; --cream:#f7f5ef; --border:#e8e4d9;
-    --text:#020817; --muted:#665a4c; --navy:#1e3a5f; --navy-dark:#0f1f35;
+    --text:#020817; --muted:#665a4c; --navy:#1e3a5f; --navy-dark:#0f1f35; --gold:#9a7b4f; --gold-light:#d4b07a;
     --serif:"Playfair Display","Cairo",Georgia,serif;
     --sans:"Inter","Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;
   }
@@ -48,21 +48,41 @@
   .panel li:last-child { border-bottom:0; }
   .panel a { color:var(--navy); font-weight:600; }
   .panel h3 { margin:18px 0 0; color:var(--navy); font-size:.75rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; }
-  .item { display:flex; align-items:center; gap:12px; }
+  #menu.panel { background:none; border:0; padding:0; }
+  .cat { position:relative; margin-top:14px; padding:120px 18px 8px; border-radius:16px; overflow:hidden; color:#fff;
+         background:#0b0f17 center top / 100% auto no-repeat; box-shadow:0 10px 30px -12px rgba(2,8,23,.6); scroll-margin-top:64px; }
+  .cat::before { content:""; position:absolute; inset:0;
+                 background:linear-gradient(180deg, rgba(5,8,15,.1) 0, rgba(5,8,15,.35) 140px, rgba(5,8,15,.72) 300px, rgba(5,8,15,.82) 100%); }
+  .cat > * { position:relative; }
+  .cat.no-photo { padding-top:28px; background:linear-gradient(160deg, var(--navy-dark), #05080f); }
+  .panel .cat h3 { margin:0; text-align:center; color:#fff; font-family:var(--serif); font-size:2rem; font-weight:700;
+                   letter-spacing:.06em; text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.5); }
+  .cat-rule { width:56px; height:2px; margin:10px auto 6px; background:var(--gold-light); }
+  .panel .cat li { border-bottom-color:rgba(255,255,255,.14); }
+  .item { display:flex; align-items:flex-start; gap:12px; }
   .item > div { flex:1; }
-  .item strong { font-weight:600; }
-  .item img { width:72px; height:72px; object-fit:cover; border-radius:12px; cursor:zoom-in; flex:none; }
-  .item .desc { display:block; margin-top:2px; color:var(--muted); font-size:.85rem; line-height:1.4; }
-  .item .price { font-weight:600; color:var(--navy); white-space:nowrap; }
-  .item.soldout { opacity:.45; }
+  .item strong { font-weight:700; color:var(--gold-light); text-transform:uppercase; letter-spacing:.03em; }
+  .item .desc { display:block; margin-top:4px; color:rgba(255,255,255,.88); font-size:.85rem; line-height:1.45; }
+  .item .price { font-weight:700; font-size:1.05rem; color:var(--gold-light); white-space:nowrap; }
+  .item.soldout { opacity:.5; }
   .item.soldout .price::after { content:" · Sold out"; font-weight:400; }
+  .premium { margin-left:6px; font-family:var(--serif); font-style:italic; font-weight:500; font-size:.95rem; color:#fff; }
+  .allergens { display:inline-flex; gap:3px; margin-left:6px; vertical-align:-3px; color:var(--gold-light); }
+  .allergens svg, .legend svg { width:17px; height:17px; stroke-width:1.6; }
+  .legend { margin:10px 0 0; padding:12px 14px; border-radius:12px; background:var(--cream); font-size:.82rem; color:var(--muted); }
+  .legend p { margin:0 0 8px; color:var(--text); font-weight:500; }
+  .legend span { display:inline-flex; align-items:center; gap:4px; margin:0 12px 4px 0; }
+  .legend svg { color:var(--gold); }
+  .chips { position:sticky; top:0; z-index:2; display:flex; gap:8px; overflow-x:auto; margin:10px -16px 0; padding:10px 16px;
+           background:rgba(15,31,53,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); scrollbar-width:none; }
+  .chips::-webkit-scrollbar { display:none; }
+  .chips a { flex:none; padding:7px 14px; border:1px solid var(--border); border-radius:999px; background:#fff;
+             color:var(--navy); font-size:.8rem; font-weight:500; text-decoration:none; }
+  .menu-note { margin:16px 0 4px; text-align:center; font-size:.85rem; font-weight:500; color:rgba(255,255,255,.9); }
   #payList small { color:var(--muted); }
   .copy { margin-left:8px; padding:5px 12px; border:1px solid var(--navy); border-radius:8px;
           background:none; color:var(--navy); font:inherit; font-size:.8rem; font-weight:500; cursor:pointer; }
   .copy-value { display:block; margin-top:6px; font-variant-numeric:tabular-nums; }
-  #lightbox { position:fixed; inset:0; background:rgba(2,8,23,.88); display:flex; align-items:center; justify-content:center; padding:16px; }
-  #lightbox[hidden] { display:none; }
-  #lightbox img { max-width:100%; max-height:100%; border-radius:12px; }
   footer { color:rgba(255,255,255,.85); text-align:center; padding:18px 16px 28px; font-size:.9rem; }
   footer:empty { display:none; }
   footer a { color:#fff; font-weight:600; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.5); }
@@ -97,19 +117,18 @@
   <section class="panel" id="pay" hidden><ul id="payList"></ul></section>
 </main>
 <footer id="footer"></footer>
-<div id="lightbox" hidden><img alt=""></div>
 <script>
   const params = new URLSearchParams(location.search);
   const table = params.get("t");
   const go = params.get("go");
 
-  const lightbox = document.getElementById("lightbox");
-  lightbox.onclick = () => { lightbox.hidden = true; };
-  function showPhoto(src, alt) {
-    const img = lightbox.querySelector("img");
-    img.src = src; img.alt = alt;
-    lightbox.hidden = false;
-  }
+  const ALLERGENS = { gluten: "Gluten", milk: "Milk & dairy", egg: "Egg", fish: "Fish & seafood" };
+  const ICONS = {
+    gluten: '<svg viewBox="0 0 24 24"><path d="M12 22V7"/><path d="M12 7c0-2.5 1-4 0-5-1 1 0 2.5 0 5z"/><path d="M12 12c-2.5 0-4-1.5-4.5-3.5 2.5 0 4 1.5 4.5 3.5zm0 0c2.5 0 4-1.5 4.5-3.5-2.5 0-4 1.5-4.5 3.5z"/><path d="M12 17c-2.5 0-4-1.5-4.5-3.5 2.5 0 4 1.5 4.5 3.5zm0 0c2.5 0 4-1.5 4.5-3.5-2.5 0-4 1.5-4.5 3.5z"/></svg>',
+    milk: '<svg viewBox="0 0 24 24"><path d="M9.5 2h5M10 2v3.5L8 8.5V20a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8.5l-2-3V2"/><path d="M8 12.5h8"/></svg>',
+    egg: '<svg viewBox="0 0 24 24"><path d="M12 22c-3.9 0-7-2.9-7-7.2C5 9.3 8 2 12 2s7 7.3 7 12.8c0 4.3-3.1 7.2-7 7.2z"/></svg>',
+    fish: '<svg viewBox="0 0 24 24"><path d="M2.5 12c2.6-4.2 8.1-5.6 12.6-2.6L20.5 6v12l-5.4-3.4C10.6 17.6 5.1 16.2 2.5 12z"/><circle cx="7.5" cy="11.3" r=".9" fill="currentColor"/></svg>',
+  };
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -133,25 +152,51 @@
     document.getElementById("mapBtn").href = c.location.maps_url;
 
     const menu = document.getElementById("menu");
-    for (const cat of c.menu.categories) {
-      menu.append(el("h3", null, cat.name));
+    const cats = c.menu.categories;
+
+    // Category shortcuts, then the allergen key, then the items.
+    const chips = el("nav", "chips");
+    cats.forEach((cat, i) => {
+      const a = el("a", null, cat.name);
+      a.href = "#cat-" + i;
+      chips.append(a);
+    });
+    const legend = el("div", "legend");
+    legend.append(el("p", null, "If you have food allergies, please inquire before ordering."));
+    for (const [key, label] of Object.entries(ALLERGENS)) {
+      const span = el("span");
+      span.innerHTML = ICONS[key];
+      span.append(label);
+      legend.append(span);
+    }
+    menu.append(chips, legend);
+
+    // Each category is a card with its own food photo behind the items.
+    cats.forEach((cat, i) => {
+      const sec = el("section", cat.photo ? "cat" : "cat no-photo");
+      sec.id = "cat-" + i;
+      if (cat.photo) sec.style.backgroundImage = `url(${JSON.stringify(cat.photo)})`;
+      sec.append(el("h3", null, cat.name), el("div", "cat-rule"));
       const ul = el("ul");
       for (const item of cat.items) {
         const li = el("li", "item" + (item.available === false ? " soldout" : ""));
-        if (item.photo) {
-          const img = el("img");
-          img.src = item.photo; img.alt = item.name; img.loading = "lazy";
-          img.onclick = () => showPhoto(item.photo, item.name);
-          li.append(img);
-        }
         const left = el("div");
         left.append(el("strong", null, item.name));
+        if (item.premium) left.append(el("span", "premium", "Premium"));
+        if (item.allergens && item.allergens.length) {
+          const icons = el("span", "allergens");
+          icons.innerHTML = item.allergens.map(a => ICONS[a] || "").join("");
+          icons.title = item.allergens.map(a => ALLERGENS[a]).join(", ");
+          left.append(icons);
+        }
         if (item.description) left.append(el("span", "desc", item.description));
         li.append(left, el("span", "price", item.price + " " + (c.currency || "")));
         ul.append(li);
       }
-      menu.append(ul);
-    }
+      sec.append(ul);
+      menu.append(sec);
+    });
+    if (c.menu.note) menu.append(el("p", "menu-note", c.menu.note));
 
     const list = document.getElementById("payList");
     for (const m of c.payment_methods) {
