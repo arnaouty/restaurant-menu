@@ -11,6 +11,12 @@
   },
   "payment_methods": [
     {
+      "name": "InstaPay",
+      "note": "Tap to pay in the InstaPay app",
+      "url": "https://ipn.eg/S/test/instapay/44qGWV",
+      "copy": "yourname@instapay"
+    },
+    {
       "name": "Cash",
       "note": "Pay your waiter or at the counter",
       "url": "",
@@ -20,24 +26,6 @@
       "name": "Visa / Mastercard",
       "note": "Ask for the card machine",
       "url": "",
-      "copy": ""
-    },
-    {
-      "name": "Apple Pay / Google Pay",
-      "note": "Contactless at the table",
-      "url": "",
-      "copy": ""
-    },
-    {
-      "name": "InstaPay",
-      "note": "Tap to pay in the InstaPay app",
-      "url": "https://ipn.eg/S/yourname/instapay/XXXXXX",
-      "copy": "yourname@instapay"
-    },
-    {
-      "name": "Pay online",
-      "note": "Secure payment link",
-      "url": "https://example.com/pay",
       "copy": ""
     }
   ],
