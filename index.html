@@ -48,8 +48,8 @@
 
   <button class="btn" id="menuBtn" type="button"><span class="icon">🍽️</span><div>Menu<small>See our dishes &amp; prices</small></div></button>
   <section class="panel" id="menu" hidden></section>
-  <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener"><span class="icon">📍</span><div>Location<small id="address"></small></div></a>
-  <button class="btn" id="payBtn" type="button"><span class="icon">💳</span><div>Payment methods<small>Cash, card &amp; online</small></div></button>
+  <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener"><span class="icon">📍</span><div>Location<small>Click to open location via Google Maps</small></div></a>
+  <button class="btn" id="payBtn" type="button"><span class="icon">💳</span><div>Payments<small>InstaPay</small></div></button>
   <section class="panel" id="pay" hidden><ul id="payList"></ul></section>
 
   <footer id="footer"></footer>
@@ -88,7 +88,6 @@
       t.hidden = false;
     }
     document.getElementById("mapBtn").href = c.location.maps_url;
-    document.getElementById("address").textContent = c.location.address || "Open in Maps";
 
     const menu = document.getElementById("menu");
     for (const cat of c.menu.categories) {
