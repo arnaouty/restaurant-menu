@@ -33,7 +33,8 @@
          background:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.6); border-radius:16px; box-shadow:0 10px 30px -12px rgba(2,8,23,.5);
          backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
          color:inherit; text-decoration:none; cursor:pointer; text-align:left; font-family:inherit; }
-  .btn .icon { flex:none; display:grid; place-items:center; width:48px; height:48px; border-radius:12px; background:var(--cream); color:var(--navy); }
+  .btn .icon { flex:none; display:grid; place-items:center; width:40px; color:var(--navy); }
+  .btn .icon svg { width:30px; height:30px; stroke-width:1.6; }
   .btn .label { flex:1; font-family:var(--serif); font-size:1.3rem; font-weight:700; }
   .btn small { display:block; margin-top:2px; font-family:var(--sans); font-weight:400; font-size:.85rem; color:var(--muted); }
   .btn .chev { color:var(--muted); flex:none; }
@@ -102,12 +103,12 @@
   <section class="panel" id="menu" hidden></section>
   <a class="btn" id="mapBtn" href="#" target="_blank" rel="noopener">
     <span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
-    <span class="label">Location<small>Click to open location via Google Maps</small></span>
+    <span class="label">Location<small>Open in Google Maps</small></span>
     <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
   </a>
   <button class="btn" id="payBtn" type="button">
     <span class="icon"><svg viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg></span>
-    <span class="label">Payments<small>InstaPay</small></span>
+    <span class="label">Payments<small>Pay with InstaPay from your phone</small></span>
     <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
   </button>
   <section class="panel" id="pay" hidden><ul id="payList"></ul></section>
