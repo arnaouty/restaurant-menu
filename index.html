@@ -28,10 +28,7 @@
   h1 { font-family:var(--serif); font-weight:500; font-size:2.6rem; line-height:1.1; letter-spacing:-.02em; margin:18px 0 0; }
   .divider { width:72px; height:2px; margin:18px auto; background:rgba(255,255,255,.6); }
   .tagline { margin:0 auto; max-width:420px; font-weight:300; font-size:1.05rem; line-height:1.5; color:rgba(255,255,255,.9); }
-  .table { display:inline-block; margin:18px 0 0; padding:6px 16px; border-radius:999px; background:#fff; color:var(--navy);
-           font-size:.85rem; font-weight:600; text-shadow:none; }
-  /* Push the buttons down so the pyramids stay visible between the title and the buttons. */
-  main { flex:1; width:100%; max-width:480px; margin:0 auto; padding:clamp(40px, 22vh, 220px) 16px 32px; }
+  main { flex:1; width:100%; max-width:480px; margin:0 auto; padding:4px 16px 32px; }
   .btn { display:flex; align-items:center; gap:16px; width:100%; margin-top:14px; padding:18px;
          background:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.6); border-radius:16px; box-shadow:0 10px 30px -12px rgba(2,8,23,.5);
          backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
@@ -95,7 +92,6 @@
   <h1 id="name">Loading…</h1>
   <div class="divider"></div>
   <p class="tagline" id="tagline"></p>
-  <p class="table" id="table" hidden></p>
 </header>
 <main>
   <button class="btn" id="menuBtn" type="button">
@@ -119,7 +115,6 @@
 <footer id="footer"></footer>
 <script>
   const params = new URLSearchParams(location.search);
-  const table = params.get("t");
   const go = params.get("go");
 
   const ALLERGENS = { gluten: "Gluten", milk: "Milk & dairy", egg: "Egg", fish: "Fish & seafood" };
@@ -144,11 +139,6 @@
     document.title = c.name;
     document.getElementById("name").textContent = c.name;
     document.getElementById("tagline").textContent = c.tagline || "";
-    if (table) {
-      const t = document.getElementById("table");
-      t.textContent = "Table " + table;
-      t.hidden = false;
-    }
     document.getElementById("mapBtn").href = c.location.maps_url;
 
     const menu = document.getElementById("menu");
