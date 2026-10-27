@@ -9,6 +9,8 @@ To change the menu link, address or payment methods later, edit `restaurant.json
 1. Fill in your details: open `admin.html` (see below) or edit `restaurant.json` by hand.
 2. Host the site. For example, enable GitHub Pages (Settings → Pages → branch `main`, folder `/`).
    Put the resulting URL in `base_url`.
+   This site uses the custom domain in `CNAME` (restaurant.platform-advert.com). Its DNS has a CNAME record
+   `restaurant` → `arnaouty.github.io`.
 3. Generate the codes:
    ```bash
    pip install qrcode pillow
